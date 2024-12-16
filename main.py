@@ -46,12 +46,6 @@ def save_watched_shows(watched_shows, filename="watched_shows.json"):
     with open(filename, "w") as file:
         json.dump(list(watched_shows), file)
 
-def load_watched_titles(filename="watched_titles.json"):
-    try:
-        with open(filename, "r") as file:
-            return set(json.load(file))
-    except FileNotFoundError:
-        return set()
     
 def load_watched_movies(filename="watched_movies.json"):
     try:
