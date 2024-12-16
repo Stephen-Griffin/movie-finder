@@ -15,7 +15,7 @@ TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 if not TMDB_API_KEY:
     raise ValueError("TMDB_API_KEY environment variable not set")
 
-def get_top_titles(platform, media_type="movie", min_rating=8.0, max_results=10):
+def get_top_titles(platform, media_type="movie", min_rating=8.0, max_results=20):
     url = f"https://api.themoviedb.org/3/discover/{media_type}"
     params = {
         "api_key": TMDB_API_KEY,
@@ -49,20 +49,31 @@ def save_watched_shows(watched_shows, filename="watched_shows.json"):
 def load_watched_movies(filename="watched_movies.json"):
     try:
         with open(filename, "r") as file:
-            return set(json.load(file))
-    except FileNotFoundError:
+            content = file.read().strip()
+            if not content:
+                raise ValueError("Empty file")
+            return set(json.loads(content))
+    except (FileNotFoundError, ValueError):
+        # Initialize the file with an empty list if it doesn't exist or is empty
+        with open(filename, "w") as file:
+            json.dump([], file)
         return set()
     
 def load_watched_shows(filename="watched_shows.json"):
     try:
         with open(filename, "r") as file:
-            return set(json.load(file))
-    except FileNotFoundError:
+            content = file.read().strip()
+            if not content:
+                raise ValueError("Empty file")
+            return set(json.loads(content))
+    except (FileNotFoundError, ValueError):
+        with open(filename, "w") as file:
+            json.dump([], file)
         return set()
     
 def mark_and_update_as_watched(filtered_list, watched_list):
     newly_watched = []
-    mark = input("\nWould you like to mark any of these as watched? (Type y for yes, or press Enter to skip)")
+    mark = input("\nWould you like to mark any of these as watched? (Type y for yes, or press Enter to skip) :")
     if mark == 'y':
         for title in filtered_list:
             user_input = input(f"Mark '{title['title']}' as watched? : ").strip().lower()
@@ -236,14 +247,6 @@ def main():
             else:
                 print("Invalid input. Please try again.")
 
-        
-
-    # want_to_see_shows = input("Do you want to see top TV shows too? (y/n): ")
-    # if want_to_see_shows == 'y':
-    #     for platform_id, platform_name in platforms.items():
-    #         print(f"Top TV Shows from: {platform_name}...")
-    #         shows = get_top_titles(platform_id, media_type="tv")
-    #         show_titles.extend(shows)
 
 
 if __name__ == "__main__":
