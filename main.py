@@ -196,6 +196,8 @@ def main():
             print("\nTop TV Shows on Netflix (Filtered):")
             for title in filtered_netflix_shows:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_netflix_shows, watched_shows)
+            save_watched_shows(watched_shows)
 
         elif 'HBO' in which_service:
             print(f"Fetching Top TV Shows from: HBO Max...")
@@ -207,6 +209,8 @@ def main():
             print("\nTop TV Shows on HBO Max (Filtered):")
             for title in filtered_hbo_shows:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_hbo_shows, watched_shows)
+            save_watched_shows(watched_shows)
 
         elif 'Disney' in which_service:
             print(f"Fetching Top TV Shows from: Disney+...")
@@ -218,6 +222,8 @@ def main():
             print("\nTop TV Shows on Disney+ (Filtered):")
             for title in filtered_disney_shows:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_disney_shows, watched_shows)
+            save_watched_shows(watched_shows)
 
         elif which_service == 'All':
             print(f"Fetching Top TV Shows from all services...")
@@ -232,14 +238,21 @@ def main():
             print("\nTop TV Shows on Netflix (Filtered):")
             for title in filtered_netflix_shows:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_netflix_shows, watched_shows)
+            save_watched_shows(watched_shows)
                 
             print("\nTop TV Shows on HBO Max (Filtered):")
             for title in filtered_hbo_shows:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_hbo_shows, watched_shows)
+            save_watched_shows(watched_shows)
+
 
             print("\nTop TV Shows on Disney+ (Filtered):")
             for title in filtered_disney_shows:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_disney_shows, watched_shows)
+            save_watched_shows(watched_shows)
 
         else:
             if 'All' in which_service and which_service != 'All':
