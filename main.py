@@ -45,7 +45,6 @@ def save_watched_movies(watched_movies, filename="watched_movies.json"):
 def save_watched_shows(watched_shows, filename="watched_shows.json"):
     with open(filename, "w") as file:
         json.dump(list(watched_shows), file)
-
     
 def load_watched_movies(filename="watched_movies.json"):
     try:
@@ -61,19 +60,17 @@ def load_watched_shows(filename="watched_shows.json"):
     except FileNotFoundError:
         return set()
     
-
-def mark_as_watched(filtered_list, watched_list):
+def mark_and_update_as_watched(filtered_list, watched_list):
+    newly_watched = []
     mark = input("\nWould you like to mark any of these as watched? (Type y for yes, or press Enter to skip)")
     if mark == 'y':
         for title in filtered_list:
             user_input = input(f"Mark '{title['title']}' as watched? : ").strip().lower()
             if user_input == 'y':
-                watched_list.append(title["title"])
+                newly_watched.append(title["title"])
+    watched_list.update(newly_watched)
 
 def main():
-    # Load watched titles from JSON file
-    watched_titles = load_watched_titles()
-
     platforms = {
         "8": "Netflix",
         "384": "HBO Max",
@@ -109,7 +106,8 @@ def main():
             for title in filtered_netflix_movies:
                 print(f"{title['title']} - Rating: {title['rating']}")
 
-            mark_as_watched(filtered_netflix_movies, watched_movies)
+            mark_and_update_as_watched(filtered_netflix_movies, watched_movies)
+            save_watched_movies(watched_movies)
 
         elif 'HBO' in which_service:
             print(f"Fetching Top Movies from: HBO Max...")
@@ -122,7 +120,8 @@ def main():
             for title in filtered_hbo_movies:
                 print(f"{title['title']} - Rating: {title['rating']}")
 
-            mark_as_watched(filtered_hbo_movies, watched_movies)
+            mark_and_update_as_watched(filtered_hbo_movies, watched_movies)
+            save_watched_movies(watched_movies)
 
         elif 'Disney' in which_service:
             print(f"Fetching Top Movies from: Disney+...")
@@ -135,7 +134,8 @@ def main():
             for title in filtered_disney_movies:
                 print(f"{title['title']} - Rating: {title['rating']}")
 
-            mark_as_watched(filtered_disney_movies, watched_movies)
+            mark_and_update_as_watched(filtered_disney_movies, watched_movies)
+            save_watched_movies(watched_movies)
 
         elif which_service == 'All':
             print(f"Fetching Top Movies from all services...")
@@ -150,14 +150,20 @@ def main():
             print("\nTop Movies on Netflix (Filtered):")
             for title in filtered_netflix_movies:
                 print(f"{title['title']} - Rating: {title['rating']}")
-            
+            mark_and_update_as_watched(filtered_netflix_movies, watched_movies)
+            save_watched_movies(watched_movies)
+
             print("\nTop Movies on HBO Max (Filtered):")
             for title in filtered_hbo_movies:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_hbo_movies, watched_movies)
+            save_watched_movies(watched_movies)
 
             print("\nTop Movies on Disney+ (Filtered):")
             for title in filtered_disney_movies:
                 print(f"{title['title']} - Rating: {title['rating']}")
+            mark_and_update_as_watched(filtered_disney_movies, watched_movies)
+            save_watched_movies(watched_movies)
 
         else:
             if 'All' in which_service and which_service != 'All':
@@ -239,19 +245,6 @@ def main():
     #         shows = get_top_titles(platform_id, media_type="tv")
     #         show_titles.extend(shows)
 
-    # Allow user to mark titles as watched
-    newly_watched = []
-    print("\nWould you like to mark any of these as watched? (Type the title to mark it, or press Enter to skip)")
-    for title in filtered_titles:
-        user_input = input(f"Mark '{title['title']}' as watched? (y/n): ").strip().lower()
-        if user_input == 'y':
-            newly_watched.append(title["title"])
-
-    # Update and save watched titles
-    watched_titles.update(newly_watched)
-    save_watched_titles(watched_titles)
-
-    print("\nUpdated watched titles saved.")
 
 if __name__ == "__main__":
     main()
